@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BaseFragment.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.kumparan.assesment.ui.base</a> &gt; <span class="el_source">BaseFragment.kt</span></div><h1>BaseFragment.kt</h1><pre class="source lang-java linenums">package com.kumparan.assesment.ui.base
+
+import android.content.Context
+import android.content.res.Configuration
+import android.os.Bundle
+import android.os.SystemClock
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
+import com.kumparan.assesment.BR
+import com.kumparan.assesment.utils.hideKeyboard
+import com.telkom.myindihomex.ui.base.MainView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
+
+<span class="nc" id="L23">abstract class BaseFragment&lt;T : ViewDataBinding, V : BaseViewModel&lt;out Any&gt;&gt;(</span>
+<span class="nc" id="L24">    private val toolbar: Boolean</span>
+) :
+<span class="nc" id="L26">    Fragment(), CoroutineScope {</span>
+
+    private lateinit var job: Job
+    private lateinit var dataBinding: T
+<span class="nc" id="L30">    private val baseViewModel by lazy { getViewModels() }</span>
+    private lateinit var rootView: View
+    private lateinit var mainView: MainView
+    @LayoutRes
+    abstract fun setLayout(): Int
+
+    abstract fun getViewModels(): V
+
+<span class="nc" id="L38">    open fun onInitialization() = Unit</span>
+
+    abstract fun onReadyAction()
+
+<span class="nc" id="L42">    open fun onObserveAction() = Unit</span>
+
+<span class="nc" id="L44">    open fun onActivityDestroyed() = Unit</span>
+
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    open fun getViewDataBinding() = dataBinding</span>
+
+    override val coroutineContext: CoroutineContext
+<span class="nc bnc" id="L49" title="All 2 branches missed.">        get() = job + Dispatchers.Main</span>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+<span class="nc" id="L52">        super.onCreate(savedInstanceState)</span>
+<span class="nc" id="L53">        job = Job()</span>
+<span class="nc" id="L54">     }</span>
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+<span class="nc" id="L61">        dataBinding = DataBindingUtil.inflate(inflater, setLayout(), container, false)</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        rootView = dataBinding.root</span>
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        return rootView</span>
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+<span class="nc" id="L68">        super.onViewCreated(view, savedInstanceState)</span>
+<span class="nc" id="L69">        baseViewModel.toolbarState.value = toolbar</span>
+<span class="nc" id="L70">        baseViewModel.toolbarState.observe(viewLifecycleOwner) {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            if (it) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">                mainView.toolbarState(true)</span>
+            } else {
+<span class="nc bnc" id="L74" title="All 2 branches missed.">                mainView.toolbarState(false)</span>
+            }
+<span class="nc" id="L76">        }</span>
+<span class="nc" id="L77">        hideKeyboard(this.requireActivity())</span>
+<span class="nc bnc" id="L78" title="All 2 branches missed.">        dataBinding.setVariable(BR._all, baseViewModel)</span>
+<span class="nc" id="L79">        onInitialization()</span>
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        dataBinding.executePendingBindings()</span>
+<span class="nc" id="L81">        onReadyAction()</span>
+<span class="nc" id="L82">        onObserveAction()</span>
+<span class="nc" id="L83">    }</span>
+
+    override fun onAttach(context: Context) {
+<span class="nc" id="L86">        super.onAttach(context)</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        mainView = activity as MainView</span>
+<span class="nc" id="L88">    }</span>
+
+    override fun onDestroy() {
+<span class="nc" id="L91">        super.onDestroy()</span>
+<span class="nc" id="L92">        onActivityDestroyed()</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">        job.cancel()</span>
+<span class="nc" id="L94">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

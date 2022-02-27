@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragment_list_post">
+
+    <fragment
+        android:id="@+id/fragment_list_post"
+        android:name="com.kumparan.assesment.ui.fragment.ListPostFragment"
+        tools:layout="@layout/fragment_list_post">
+
+        <action
+            android:id="@+id/action_fragment_list_post_to_fragment_detail_post"
+            app:destination="@id/fragment_detail_post"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_detail_post"
+        android:name="com.kumparan.assesment.ui.fragment.DetailPostFragment"
+        tools:layout="@layout/fragment_detail_post">
+        <argument
+            android:name="data"
+            app:argType="com.kumparan.assesment.data.model.PostFinal" />
+        <action
+            android:id="@+id/action_fragment_detail_post_to_fragment_detail_user"
+            app:destination="@id/fragment_detail_user"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_detail_user"
+        android:name="com.kumparan.assesment.ui.fragment.UserDetailFragment"
+        tools:layout="@layout/fragment_detail_user">
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_fragment_detail_user_to_fragment_detail_photo"
+            app:destination="@id/fragment_detail_photo" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fragment_detail_photo"
+        android:name="com.kumparan.assesment.ui.fragment.PhotoDetailFragment"
+        tools:layout="@layout/fragment_detail_photo">
+        <argument
+            android:name="url"
+            app:argType="string" />
+        <argument
+            android:name="photoTitle"
+            app:argType="string" />
+    </fragment>
+
+</navigation>

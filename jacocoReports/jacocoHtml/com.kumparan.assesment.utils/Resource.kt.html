@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Resource.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.kumparan.assesment.utils</a> &gt; <span class="el_source">Resource.kt</span></div><h1>Resource.kt</h1><pre class="source lang-java linenums">package com.kumparan.assesment.utils
+
+
+<span class="fc" id="L4">data class Resource&lt;T&gt;(</span>
+<span class="pc" id="L5">    val status: Status,</span>
+<span class="pc" id="L6">    val data: T?,</span>
+<span class="pc" id="L7">    val message: String?</span>
+) {
+
+    enum class Status {
+<span class="fc" id="L11">        SUCCESS,</span>
+<span class="fc" id="L12">        LOADING,</span>
+<span class="fc" id="L13">        ERROR</span>
+    }
+
+    companion object {
+        fun &lt;T&gt; success(data: T?): Resource&lt;T&gt; =
+<span class="fc" id="L18">            Resource(status = Status.SUCCESS, data = data, message = null)</span>
+
+        fun &lt;T&gt; loading(data: T?): Resource&lt;T&gt; =
+<span class="fc" id="L21">            Resource(status = Status.LOADING, data = data, message = null)</span>
+
+<span class="nc" id="L23">        fun &lt;T&gt; error(message: String?, data: T? = null, throwable: Throwable): Resource&lt;T&gt; =</span>
+<span class="fc" id="L24">            Resource(status = Status.ERROR, data = data, message = message)</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PostRepository.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.kumparan.assesment.data.repository</a> &gt; <span class="el_source">PostRepository.kt</span></div><h1>PostRepository.kt</h1><pre class="source lang-java linenums">package com.kumparan.assesment.data.repository
+
+import com.kumparan.assesment.data.model.Comment
+import com.kumparan.assesment.data.model.Post
+import com.kumparan.assesment.data.model.PostFinal
+import com.kumparan.assesment.data.model.User
+import com.kumparan.assesment.data.source.ApiServicePost
+import com.kumparan.assesment.data.source.ApiServiceUser
+import kotlinx.coroutines.flow.*
+import javax.inject.Inject
+
+<span class="fc" id="L12">open class PostRepository @Inject constructor(</span>
+<span class="fc" id="L13">    private val apiServicePost: ApiServicePost,</span>
+<span class="fc" id="L14">    private val apiServiceUser: ApiServiceUser</span>
+) {
+
+    private suspend fun getPostsRemote(): List&lt;Post&gt; {
+<span class="fc" id="L18">        return apiServicePost.getPostsAsync().await()</span>
+    }
+
+    private suspend fun getUserRemote(): List&lt;User&gt; {
+<span class="fc" id="L22">        return apiServiceUser.getUsersAsync().await()</span>
+    }
+
+    suspend fun getCommentsRemote(postId:Int): List&lt;Comment&gt; {
+<span class="fc" id="L26">        return apiServicePost.getPostCommentsAsync(postId).await()</span>
+    }
+
+<span class="fc" id="L29">    suspend fun getListPostData(): List&lt;PostFinal&gt; {</span>
+<span class="fc" id="L30">        val post = getPostsRemote()</span>
+<span class="fc" id="L31">        val user = getUserRemote()</span>
+
+<span class="fc" id="L33">        return post.asFlow().map { postElement -&gt;</span>
+            val userObject = user.find { item -&gt; item.id == postElement.userId }
+            val name = userObject?.name ?: &quot;-&quot;
+            val companyName = userObject?.company?.name ?: &quot;-&quot;
+            val id = userObject?.id ?: 0
+            PostFinal(postElement.id,name, id, companyName,postElement.title, postElement.body)
+<span class="fc" id="L39">        }.toList()</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

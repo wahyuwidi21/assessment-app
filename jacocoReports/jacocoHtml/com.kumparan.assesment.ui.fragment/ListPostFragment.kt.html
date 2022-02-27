@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ListPostFragment.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.kumparan.assesment.ui.fragment</a> &gt; <span class="el_source">ListPostFragment.kt</span></div><h1>ListPostFragment.kt</h1><pre class="source lang-java linenums">package com.kumparan.assesment.ui.fragment
+
+import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.kumparan.assesment.R
+import com.kumparan.assesment.data.model.PostFinal
+import com.kumparan.assesment.databinding.FragmentListPostBinding
+import com.kumparan.assesment.ui.navigator.ListPostNavigator
+import com.kumparan.assesment.ui.viewmodel.ListPostViewModel
+import com.kumparan.assesment.ui.adapter.ListPostAdapter
+import com.kumparan.assesment.ui.base.BaseFragment
+import com.kumparan.assesment.utils.Resource
+import dagger.hilt.android.AndroidEntryPoint
+
+
+@AndroidEntryPoint
+<span class="nc" id="L20">class ListPostFragment : BaseFragment&lt;FragmentListPostBinding, ListPostViewModel&gt;(true),</span>
+    ListPostNavigator {
+
+<span class="nc" id="L23">    private val detailViewModel: ListPostViewModel by viewModels()</span>
+<span class="nc" id="L24">    private val mainNavController by lazy { requireActivity().findNavController(R.id.nav_host_main) }</span>
+
+
+    private lateinit var binding: FragmentListPostBinding
+    private lateinit var listPostAdapter: ListPostAdapter
+
+<span class="nc" id="L30">    override fun setLayout(): Int = R.layout.fragment_list_post</span>
+
+<span class="nc" id="L32">    override fun getViewModels(): ListPostViewModel = detailViewModel</span>
+
+
+    override fun onInitialization() {
+<span class="nc" id="L36">        super.onInitialization()</span>
+<span class="nc" id="L37">        binding = getViewDataBinding()</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        binding.lifecycleOwner = this</span>
+<span class="nc" id="L39">        detailViewModel.navigator = this</span>
+<span class="nc" id="L40">    }</span>
+
+    override fun onReadyAction() {
+<span class="nc" id="L43">        detailViewModel.getPosts()</span>
+<span class="nc" id="L44">    }</span>
+
+    override fun onObserveAction() {
+<span class="nc" id="L47">        detailViewModel.postData.observe(this, {</span>
+<span class="nc bnc" id="L48" title="All 4 branches missed.">            when (it.status) {</span>
+                Resource.Status.LOADING -&gt; {
+<span class="nc bnc" id="L50" title="All 2 branches missed.">                    binding.skeletonListPost.showSkeleton()</span>
+                }
+                Resource.Status.ERROR -&gt; {
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                    binding.skeletonListPost.showOriginal()</span>
+                }
+                Resource.Status.SUCCESS -&gt; {
+
+<span class="nc bnc" id="L57" title="All 6 branches missed.">                    if (!it.data.isNullOrEmpty()) {</span>
+<span class="nc" id="L58">                        listPostAdapter = ListPostAdapter(it.data) { data -&gt;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                            detailViewModel.navigator?.goToDetailPost(data)</span>
+<span class="nc" id="L60">                        }</span>
+
+<span class="nc bnc" id="L62" title="All 2 branches missed.">                        binding.rvPost.apply {</span>
+<span class="nc" id="L63">                            visibility = View.VISIBLE</span>
+<span class="nc" id="L64">                            layoutManager = LinearLayoutManager(requireContext())</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                            adapter = listPostAdapter</span>
+<span class="nc" id="L66">                        }</span>
+
+                    }
+<span class="nc bnc" id="L69" title="All 2 branches missed.">                    binding.skeletonListPost.showOriginal()</span>
+                }
+            }
+<span class="nc" id="L72">        })</span>
+<span class="nc" id="L73">    }</span>
+
+    override fun goToDetailPost(
+        data: PostFinal
+    ) {
+<span class="nc" id="L78">        val bundle =</span>
+<span class="nc" id="L79">            bundleOf(</span>
+<span class="nc" id="L80">                &quot;data&quot; to data</span>
+            )
+<span class="nc" id="L82">        mainNavController.navigate(</span>
+<span class="nc" id="L83">            R.id.action_fragment_list_post_to_fragment_detail_post,</span>
+<span class="nc" id="L84">            bundle</span>
+        )
+<span class="nc" id="L86">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

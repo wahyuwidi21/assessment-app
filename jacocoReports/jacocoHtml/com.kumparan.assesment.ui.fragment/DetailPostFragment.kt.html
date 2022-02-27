@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DetailPostFragment.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.kumparan.assesment.ui.fragment</a> &gt; <span class="el_source">DetailPostFragment.kt</span></div><h1>DetailPostFragment.kt</h1><pre class="source lang-java linenums">package com.kumparan.assesment.ui.fragment
+
+import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.kumparan.assesment.R
+import com.kumparan.assesment.databinding.FragmentDetailPostBinding
+import com.kumparan.assesment.ui.adapter.CommentPostAdapter
+import com.kumparan.assesment.ui.base.BaseFragment
+import com.kumparan.assesment.ui.navigator.DetailPostNavigator
+import com.kumparan.assesment.ui.viewmodel.DetailPostViewModel
+import com.kumparan.assesment.utils.Resource
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+<span class="nc" id="L19">class DetailPostFragment : BaseFragment&lt;FragmentDetailPostBinding, DetailPostViewModel&gt;(true),</span>
+    DetailPostNavigator {
+
+<span class="nc" id="L22">    private val detailViewModel: DetailPostViewModel by viewModels()</span>
+<span class="nc" id="L23">    private val args: DetailPostFragmentArgs by navArgs()</span>
+<span class="nc" id="L24">    private val mainNavController by lazy { requireActivity().findNavController(R.id.nav_host_main) }</span>
+
+
+    private lateinit var binding: FragmentDetailPostBinding
+    private lateinit var commentPostAdapter: CommentPostAdapter
+
+<span class="nc" id="L30">    override fun setLayout(): Int = R.layout.fragment_detail_post</span>
+
+<span class="nc" id="L32">    override fun getViewModels(): DetailPostViewModel = detailViewModel</span>
+
+    override fun onInitialization() {
+<span class="nc" id="L35">        super.onInitialization()</span>
+<span class="nc" id="L36">        binding = getViewDataBinding()</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">        binding.lifecycleOwner = this</span>
+<span class="nc" id="L38">        detailViewModel.navigator = this</span>
+<span class="nc" id="L39">    }</span>
+
+    override fun onReadyAction() {
+<span class="nc" id="L42">        detailViewModel.getComments(1)</span>
+<span class="nc bnc" id="L43" title="All 6 branches missed.">        binding.postDetailTitle.text = args?.data?.title</span>
+<span class="nc bnc" id="L44" title="All 6 branches missed.">        binding.postDetailUserName.text = args?.data?.userName</span>
+<span class="nc bnc" id="L45" title="All 6 branches missed.">        binding.postDetailBody.text = args?.data?.body</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">        binding.postDetailUserName.setOnClickListener {</span>
+<span class="nc bnc" id="L47" title="All 2 branches missed.">            detailViewModel.navigator?.goToUserDetail(args.data.postId)</span>
+<span class="nc" id="L48">        }</span>
+<span class="nc" id="L49">    }</span>
+
+    override fun onObserveAction() {
+<span class="nc" id="L52">        detailViewModel.comments.observe(this, {</span>
+<span class="nc bnc" id="L53" title="All 4 branches missed.">            when (it.status) {</span>
+                Resource.Status.LOADING -&gt; {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">                    binding.skeletonDetailPost.showSkeleton()</span>
+                }
+                Resource.Status.ERROR -&gt; {
+<span class="nc bnc" id="L58" title="All 2 branches missed.">                    binding.skeletonDetailPost.showOriginal()</span>
+                }
+                Resource.Status.SUCCESS -&gt; {
+<span class="nc bnc" id="L61" title="All 6 branches missed.">                    if (!it.data.isNullOrEmpty()) {</span>
+<span class="nc" id="L62">                        commentPostAdapter = CommentPostAdapter(it.data)</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                        binding.rvComment.apply {</span>
+<span class="nc" id="L65">                            visibility = View.VISIBLE</span>
+<span class="nc" id="L66">                            layoutManager = LinearLayoutManager(requireContext())</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">                            adapter = commentPostAdapter</span>
+<span class="nc" id="L68">                        }</span>
+                    }
+<span class="nc bnc" id="L70" title="All 2 branches missed.">                    binding.skeletonDetailPost.showOriginal()</span>
+                }
+            }
+<span class="nc" id="L73">        })</span>
+<span class="nc" id="L74">    }</span>
+
+    override fun goToUserDetail(userId: Int) {
+<span class="nc" id="L77">        val bundle =</span>
+<span class="nc" id="L78">            bundleOf(</span>
+<span class="nc" id="L79">                &quot;userId&quot; to userId</span>
+            )
+<span class="nc" id="L81">        mainNavController.navigate(</span>
+<span class="nc" id="L82">            R.id.action_fragment_detail_post_to_fragment_detail_user,</span>
+<span class="nc" id="L83">            bundle</span>
+        )
+<span class="nc" id="L85">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

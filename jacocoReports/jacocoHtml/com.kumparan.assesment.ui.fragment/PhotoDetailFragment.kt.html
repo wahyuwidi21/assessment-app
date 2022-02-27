@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PhotoDetailFragment.kt</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">app</a> &gt; <a href="index.source.html" class="el_package">com.kumparan.assesment.ui.fragment</a> &gt; <span class="el_source">PhotoDetailFragment.kt</span></div><h1>PhotoDetailFragment.kt</h1><pre class="source lang-java linenums">package com.kumparan.assesment.ui.fragment
+
+import android.annotation.SuppressLint
+import android.graphics.Matrix
+import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import androidx.core.os.bundleOf
+import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.request.RequestOptions
+import com.kumparan.assesment.R
+import com.kumparan.assesment.databinding.FragmentDetailPhotoBinding
+import com.kumparan.assesment.ui.adapter.AlbumAdapter
+import com.kumparan.assesment.ui.base.BaseFragment
+import com.kumparan.assesment.ui.navigator.PhotoDetailNavigator
+import com.kumparan.assesment.ui.viewmodel.PhotoDetailViewModel
+import com.kumparan.assesment.ui.viewmodel.UserDetailViewModel
+import com.kumparan.assesment.utils.Resource
+import dagger.hilt.android.AndroidEntryPoint
+import android.view.ScaleGestureDetector
+import android.view.ScaleGestureDetector.SimpleOnScaleGestureListener
+import android.graphics.PointF
+import android.widget.ImageView
+
+
+@AndroidEntryPoint
+<span class="nc" id="L34">class PhotoDetailFragment : BaseFragment&lt;FragmentDetailPhotoBinding, PhotoDetailViewModel&gt;(false),</span>
+    PhotoDetailNavigator {
+
+<span class="nc" id="L37">    private val photoDetailViewModel: PhotoDetailViewModel by viewModels()</span>
+<span class="nc" id="L38">    private val args: PhotoDetailFragmentArgs by navArgs()</span>
+    private lateinit var binding: FragmentDetailPhotoBinding
+
+<span class="nc" id="L41">    override fun setLayout(): Int = R.layout.fragment_detail_photo</span>
+
+<span class="nc" id="L43">    override fun getViewModels(): PhotoDetailViewModel = photoDetailViewModel</span>
+
+    override fun onInitialization() {
+<span class="nc" id="L46">        super.onInitialization()</span>
+<span class="nc" id="L47">        binding = getViewDataBinding()</span>
+<span class="nc bnc" id="L48" title="All 2 branches missed.">        binding.lifecycleOwner = this</span>
+<span class="nc" id="L49">        photoDetailViewModel.navigator = this</span>
+
+<span class="nc" id="L51">    }</span>
+
+    @SuppressLint(&quot;ClickableViewAccessibility&quot;)
+    override fun onReadyAction() {
+
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        binding.txtTitle.text = args.photoTitle</span>
+
+<span class="nc" id="L58">        val image = GlideUrl(</span>
+<span class="nc" id="L59">            args.url, LazyHeaders.Builder()</span>
+<span class="nc" id="L60">                .addHeader(&quot;User-Agent&quot;, &quot;5&quot;)</span>
+<span class="nc" id="L61">                .build()</span>
+        )
+
+<span class="nc" id="L64">        Glide.with(requireContext())</span>
+<span class="nc" id="L65">            .load(image)</span>
+<span class="nc" id="L66">            .diskCacheStrategy(DiskCacheStrategy.NONE)</span>
+<span class="nc" id="L67">            .skipMemoryCache(true)</span>
+<span class="nc bnc" id="L68" title="All 2 branches missed.">            .into(binding.imgFull)</span>
+
+<span class="nc bnc" id="L70" title="All 2 branches missed.">        binding.btnClose.setOnClickListener {</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">            this.activity?.onBackPressed()</span>
+<span class="nc" id="L72">        }</span>
+<span class="nc" id="L73">    }</span>
+
+}
+
+
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
